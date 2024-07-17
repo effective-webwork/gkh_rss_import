@@ -56,6 +56,11 @@ class RssImportController extends AbstractPlugin
 
     protected LastRssService $rssService;
 
+    /**
+     * @var LastRssService[]
+     */
+    protected array $rssServiceSuperTags;
+
     protected DateFormatter $dateFormatter;
 
     public function __construct($_ = null, TypoScriptFrontendController $frontendController = null)
@@ -65,6 +70,7 @@ class RssImportController extends AbstractPlugin
         $this->cacheManager = GeneralUtility::makeInstance(CacheManager::class);
         $this->rssService = GeneralUtility::makeInstance(LastRssService::class);
         $this->dateFormatter = GeneralUtility::makeInstance(DateFormatter::class);
+        $this->rssServiceSuperTags = [];
     }
 
     /**
@@ -98,6 +104,10 @@ class RssImportController extends AbstractPlugin
 
         if ($this->conf['stripHTML'] ?? false) {
             $this->rssService->setStripHTML(true);
+        }
+
+        if ($this->conf['superTagUrl'] && $this->conf['superTagTag']) {
+            $this->getSuperTagFeeds($this->conf['superTagUrl'], $this->conf['superTagTag']);
         }
 
         $this->template = $this->getTemplate();
@@ -156,6 +166,33 @@ class RssImportController extends AbstractPlugin
 
         // Try to load and parse RSS file
         $rss = $this->rssService->getFeed();
+
+        $superTagFailed = false;
+        if ($this->conf['superTagUrl'] && $this->conf['superTagTag']) {
+            $logger = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Log\LogManager::class)->getLogger(__CLASS__);
+
+            $rssSuperTagItems = [];
+            foreach ($this->rssServiceSuperTags as $rssServiceSuperTag) {
+                $rssSuperTag = $rssServiceSuperTag->getFeed();
+                if (is_array($rssSuperTag)) {
+                    if (isset($rssSuperTag['items'][0])) {
+                        $rssSuperTagItems[] = $rssSuperTag['items'][0];
+                    } else {
+                        $logger->warning('RssSuperTag failed', [$this->conf['superTagUrl'], $this->conf['superTagTag']]);
+                    }
+                } else {
+                    $logger->warning('RssSuperTag failed', [$this->conf['superTagUrl'], $this->conf['superTagTag']]);
+                    $superTagFailed = true;
+                    break;
+                }
+            }
+
+            if (is_array($rss) && !empty($rssSuperTagItems)) {
+                $rss['items'] = array_merge($rssSuperTagItems, $rss['items']);
+                $rss['items_count'] = sizeof($rss['items']);
+            }
+        }
+
         if (is_array($rss)) {
             $rss['title'] = strip_tags($this->rssService->unHtmlEntities(strip_tags((string)$rss['title'])));
             if (isset($rss['description'])) {
@@ -179,6 +216,24 @@ class RssImportController extends AbstractPlugin
             $markerArray['###CLASS_DESCRIPTION###'] = $this->pi_classParam('description');
             // TODO: htmlspecialchars?
             $markerArray['###DESCRIPTION###'] = smart_trim($rss['description'], (int)$this->conf['headerLength']);
+
+            if (($this->conf['subscribe'] ?? null) == 1) {
+                $iconOutput = $this->cObj->cObjGetSingle('IMAGE', [
+                    'altText' => 'Feed abonnieren',
+                    'titleText' => '',
+                    'file' => GeneralUtility::getFileAbsFileName('EXT:gkh_rss_import/Resources/Public/Icons/rss.gif'),
+                    'file.' => []
+                ]);
+
+                $markerArray['###SUBSCRIBE###'] = sprintf(
+                    '<div style="text-align: right; font-size: .7em;margin-bottom: 10px;">Feed abonnieren&nbsp;<a href="%s" target="%s">%s</a></div><br />',
+                    $this->removeDoubleHTTP($this->conf['rssFeed']),
+                    '_blank',
+                    $iconOutput
+                );
+            } else {
+                $markerArray['###SUBSCRIBE###'] = '';
+            }
 
             $subPart = $this->getSubPart($this->template, '###RSSIMPORT_TEMPLATE###');
             $itemSubpart = $this->getSubPart($subPart, '###ITEM###');
@@ -421,6 +476,19 @@ class RssImportController extends AbstractPlugin
             $flex['templateFile'] = $this->flexFormValue('template', 'templateS');
         }
 
+        // super tag
+        if ($this->flexFormValue('super_tag_url', 'superTag')) {
+            $flex['superTagUrl'] = $this->flexFormValue('super_tag_url', 'superTag');
+        }
+        if ($this->flexFormValue('super_tag_tag', 'superTag')) {
+            $flex['superTagTag'] = $this->flexFormValue('super_tag_tag', 'superTag');
+        }
+
+        // subscribe
+        if ($this->flexFormValue('subscribe', 'rssFeed')) {
+            $flex['subscribe'] = $this->flexFormValue('subscribe', 'rssFeed');
+        }
+
         $this->conf = array_merge($this->conf, $flex);
     }
 
@@ -486,5 +554,37 @@ class RssImportController extends AbstractPlugin
     protected function getRequest(): ServerRequestInterface
     {
         return $GLOBALS['TYPO3_REQUEST'];
+    }
+
+    /**
+     * Returns an item with content of a super tag
+     *
+     * @param string $url
+     * @param string $superTags
+     * @return array
+     */
+    protected function getSuperTagFeeds($url, $superTags)
+    {
+        $tags = explode(",", $superTags);
+        foreach ($tags as $tag) {
+            $rssService = GeneralUtility::makeInstance(LastRssService::class);
+            $rssService
+                ->setUrl($url . trim($tag))
+                ->setCP('utf-8')
+                ->setItemsLimit(1)
+                ->setDateFormat('m/d/Y');
+
+            if (($this->conf['flexCache'] ?? null) !== null) {
+                $rssService->setCacheTime((int)$this->conf['flexCache']);
+            }
+
+            if ($this->conf['stripHTML'] == 1) {
+                $rssService->setStripHTML(true);
+            }
+
+            if ($rssService) {
+                $this->rssServiceSuperTags[] = $rssService;
+            }
+        }
     }
 }

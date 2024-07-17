@@ -15,8 +15,8 @@
 							<config>
 								<type>input</type>
 								<size>50</size>
-								<default>https://feeds.bbci.co.uk/news/rss.xml</default>
-								<placeholder>https://feeds.bbci.co.uk/news/rss.xml</placeholder>
+								<default></default>
+								<placeholder></placeholder>
 								<eval>required,nospace</eval>
 							</config>
 						</TCEforms>
@@ -109,9 +109,48 @@
 							</config>
 						</TCEforms>
 					</errorMessage>
+					<subscribe>
+						<TCEforms>
+							<label>LLL:EXT:gkh_rss_import/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.subscribe</label>
+							<config>
+								<type>check</type>
+							</config>
+						</TCEforms>
+					</subscribe>
 				</el>
 			</ROOT>
 		</rssFeed>
+		<superTag>
+			<ROOT>
+				<TCEforms>
+					<sheetTitle>LLL:EXT:gkh_rss_import/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sheet_super_tag</sheetTitle>
+				</TCEforms>
+				<el>
+					<super_tag_url>
+						<TCEforms>
+							<label>LLL:EXT:gkh_rss_import/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sheet_super_tag_url</label>
+							<config>
+								<type>input</type>
+								<checkbox></checkbox>
+								<size>50</size>
+								<eval>nospace</eval>
+							</config>
+						</TCEforms>
+					</super_tag_url>
+					<super_tag_tag>
+						<TCEforms>
+							<label>LLL:EXT:gkh_rss_import/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sheet_super_tag_tag</label>
+							<config>
+								<type>input</type>
+								<checkbox></checkbox>
+								<size>50</size>
+								<default>website1,veranstaltungen1</default>
+							</config>
+						</TCEforms>
+					</super_tag_tag>
+				</el>
+			</ROOT>
+		</superTag>
 		<rssSettings>
 			<ROOT>
 				<TCEforms>

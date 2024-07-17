@@ -33,6 +33,14 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
         ];
     }
 
+    $GLOBALS['TYPO3_CONF_VARS']['LOG']['GertKaaeHansen']['GkhRssImport']['Controller']['writerConfiguration'] = [
+        \TYPO3\CMS\Core\Log\LogLevel::WARNING => [
+            \TYPO3\CMS\Core\Log\Writer\FileWriter::class  => [
+                'logFile' => \TYPO3\CMS\Core\Core\Environment::getVarPath() . '/log/typo3_gkhRssImport.log'
+            ]
+        ]
+    ];
+
     if (!Environment::isComposerMode()) {
         $extPath = ExtensionManagementUtility::extPath('gkh_rss_import');
         require_once($extPath . 'Resources/PHP/lastRSS.php');
