@@ -99,6 +99,18 @@
 			<trans-unit id="tt_content.pi_flexform.template_title" resname="tt_content.pi_flexform.template_title" approved="yes">
 				<source>Template</source>
 			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.sheet_super_tag" resname="tt_content.pi_flexform.sheet_super_tag" approved="yes">
+    	    	<source>Super tag keyword</source>
+        	</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.sheet_super_tag_url" resname="tt_content.pi_flexform.sheet_super_tag_url" approved="yes">
+        		<source>RSS Feed URL without value for attribute "tag"</source>
+        	</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.sheet_super_tag_tag" resname="tt_content.pi_flexform.sheet_super_tag_tag" approved="yes">
+        		<source>Super tags comma separated</source>
+        	</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.subscribe" resname="tt_content.pi_flexform.subscribe" approved="yes">
+				<source>Subscribe Link</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

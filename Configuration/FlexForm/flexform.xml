@@ -13,8 +13,8 @@
 						<config>
 							<type>input</type>
 							<size>50</size>
-							<default>https://feeds.bbci.co.uk/news/rss.xml</default>
-							<placeholder>https://feeds.bbci.co.uk/news/rss.xml</placeholder>
+							<default></default>
+							<placeholder></placeholder>
 							<eval>nospace</eval>
 							<required>1</required>
 						</config>
@@ -95,9 +95,40 @@
 							<placeholder>It's not possible to reach the RSS feed.</placeholder>
 						</config>
 					</errorMessage>
+					<subscribe>
+                        <label>LLL:EXT:gkh_rss_import/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.subscribe</label>
+                        <config>
+                            <type>check</type>
+                        </config>
+					</subscribe>
 				</el>
 			</ROOT>
 		</rssFeed>
+		<superTag>
+			<ROOT>
+                <sheetTitle>LLL:EXT:gkh_rss_import/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sheet_super_tag</sheetTitle>
+				<el>
+					<super_tag_url>
+                        <label>LLL:EXT:gkh_rss_import/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sheet_super_tag_url</label>
+                        <config>
+                            <type>input</type>
+                            <checkbox></checkbox>
+                            <size>50</size>
+                            <eval>nospace</eval>
+                        </config>
+					</super_tag_url>
+					<super_tag_tag>
+                        <label>LLL:EXT:gkh_rss_import/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sheet_super_tag_tag</label>
+                        <config>
+                            <type>input</type>
+                            <checkbox></checkbox>
+                            <size>50</size>
+                            <default>website1,veranstaltungen1</default>
+                        </config>
+					</super_tag_tag>
+				</el>
+			</ROOT>
+		</superTag>
 		<rssSettings>
 			<ROOT>
 				<sheetTitle>LLL:EXT:gkh_rss_import/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.settings</sheetTitle>

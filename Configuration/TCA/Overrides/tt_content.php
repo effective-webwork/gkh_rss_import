@@ -27,13 +27,17 @@ ExtensionManagementUtility::addPlugin(
         'LLL:EXT:gkh_rss_import/Resources/Private/Language/locallang_db.xlf:tt_content.list_type_pi1',
         'gkh_rss_import_pi1',
     ],
-    ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT,
+    ExtensionUtility::PLUGIN_TYPE_PLUGIN,
     'gkh_rss_import'
 );
 ExtensionManagementUtility::addToAllTCAtypes('tt_content', '--div--;Configuration,pi_flexform,', 'gkh_rss_import_pi1', 'after:subheader');
 
+$GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist']['gkh_rss_import_pi1'] = 'layout,select_key,pages,recursive';
+$GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['gkh_rss_import_pi1'] = 'pi_flexform';
+
+
 ExtensionManagementUtility::addPiFlexFormValue(
-    '*',
+    'gkh_rss_import_pi1',
     'FILE:EXT:gkh_rss_import/Configuration/FlexForm/flexform.xml',
-    'gkh_rss_import_pi1'
+    'list'
 );

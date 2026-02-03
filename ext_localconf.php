@@ -17,7 +17,11 @@ tt_content.' . $pluginSignature . ' =< lib.contentElement
 tt_content.' . $pluginSignature . ' {
     templateName = Generic
     20 =< plugin.tx_gkhrssimport_pi1
-}');
+}
+
+tt_content.list.20.' . $pluginSignature . ' =< plugin.tx_gkhrssimport_pi1
+
+');
 
     ExtensionManagementUtility::addTypoScript(
         'gkh_rss_import',
@@ -37,6 +41,14 @@ tt_content.' . $pluginSignature . ' {
             ],
         ];
     }
+
+    $GLOBALS['TYPO3_CONF_VARS']['LOG']['GertKaaeHansen']['GkhRssImport']['Controller']['writerConfiguration'] = [
+        \TYPO3\CMS\Core\Log\LogLevel::WARNING => [
+            \TYPO3\CMS\Core\Log\Writer\FileWriter::class  => [
+                'logFile' => \TYPO3\CMS\Core\Core\Environment::getVarPath() . '/log/typo3_gkhRssImport.log'
+            ]
+        ]
+    ];
 
     if (!Environment::isComposerMode()) {
         $extPath = ExtensionManagementUtility::extPath('gkh_rss_import');
