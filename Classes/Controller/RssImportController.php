@@ -106,7 +106,7 @@ class RssImportController extends AbstractPlugin
             $this->rssService->setStripHTML(true);
         }
 
-        if ($this->conf['superTagUrl'] && $this->conf['superTagTag']) {
+        if (($this->conf['superTagUrl'] ?? null) && ($this->conf['superTagTag'] ?? null)) {
             $this->getSuperTagFeeds($this->conf['superTagUrl'], $this->conf['superTagTag']);
         }
 
@@ -168,7 +168,7 @@ class RssImportController extends AbstractPlugin
         $rss = $this->rssService->getFeed();
 
         $superTagFailed = false;
-        if ($this->conf['superTagUrl'] && $this->conf['superTagTag']) {
+        if (($this->conf['superTagUrl'] ?? null) && ($this->conf['superTagTag'] ?? null)) {
             $logger = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Log\LogManager::class)->getLogger(__CLASS__);
 
             $rssSuperTagItems = [];

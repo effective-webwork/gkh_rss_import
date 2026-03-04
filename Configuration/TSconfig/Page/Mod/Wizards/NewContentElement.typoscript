@@ -5,8 +5,8 @@ mod.wizards.newContentElement.wizardItems.plugins {
 			title = LLL:EXT:gkh_rss_import/Resources/Private/Language/locallang.xlf:pi1_title
 			description = LLL:EXT:gkh_rss_import/Resources/Private/Language/locallang.xlf:pi1_plus_wiz_description
 			tt_content_defValues {
-				CType = list
-				list_type = gkh_rss_import_pi1
+				CType = gkh_rss_import_pi1
+				list_type =
 			}
 		}
 	}
